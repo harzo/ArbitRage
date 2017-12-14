@@ -8,6 +8,9 @@ class Currency(models.Model):
     sign_after = models.BooleanField(default=True)
     crypto = models.BooleanField(default=False)
 
+    class Meta:
+        verbose_name_plural = "currencies"
+
     def __str__(self):
         return self.name+' ('+self.code+')'
 

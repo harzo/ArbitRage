@@ -1,3 +1,20 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Currency, Exchange, ExchangePair
+
+
+class ExchangePairInline(admin.TabularInline):
+    model = ExchangePair
+
+
+class CurrencyAdmin(admin.ModelAdmin):
+    fields = ['name', 'code', 'sign', 'sign_after', 'crypto']
+
+
+class ExchangeAdmin(admin.ModelAdmin):
+    fields = ['name']
+    inlines = [ExchangePairInline]
+
+
+admin.site.register(Currency, CurrencyAdmin)
+admin.site.register(Exchange, ExchangeAdmin)
