@@ -1,0 +1,61 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% block meta %}{% endblock %}
+    {% block base_title %}
+    <title>{% block title %}ArbitRage{% endblock %}</title>
+    {% endblock %}
+
+    {# Base Foundation CSS #}
+    {% block foundation_css %}
+    <link href="{% static "css/foundation.min.css" %}" rel="stylesheet"/>
+    <link href="{% static "css/foundation-icons.css" %}" rel="stylesheet"/>
+    {% endblock %}
+
+    {# Custom CSS #}
+    <link rel="stylesheet" href="{% static "css/base.css" %}">
+    {% block css %}{% endblock %}
+
+    {# Custom head JS #}
+    {% block head_js %}{% endblock %}
+</head>
+<body {% block body_attr %}{% endblock %}>
+    <div class="off-canvas-wrapper">
+        <div class="off-canvas-wrapper-inner" data-off-canvas-wrapper>
+            <div class="off-canvas position-left reveal-for-large" id="main-menu" data-off-canvas>
+                <div class="row column">
+                    <ul class="vertical menu">
+                      <li><a href="">Home</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="off-canvas-content" data-off-canvas-content>
+                <div class="title-bar hide-for-large">
+                    <div class="title-bar-left">
+                    <button class="menu-icon" type="button" data-open="main-menu"></button>
+                    <span class="title-bar-title">ArbitRage</span>
+                    </div>
+                </div>
+
+                {% block base_body %}{% endblock %}
+
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static "js/jquery-2.1.4.min.js" %}"></script>
+    <script src="{% static "js/foundation.js" %}"></script>
+    <script>
+      $(document).foundation();
+    </script>
+    <script src="{% static "js/js.cookie.js" %}"></script>
+
+    <script src="{% static "js/jquery.twbsPagination.js" %}"></script>
+    <script src="{% static "js/scripts.js" %}"></script>
+</body>
+</html>
