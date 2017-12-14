@@ -1,4 +1,4 @@
-{% load staticfiles %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,12 +12,12 @@
 
     {# Base Foundation CSS #}
     {% block foundation_css %}
-    <link href="{% static "css/foundation.min.css" %}" rel="stylesheet"/>
-    <link href="{% static "css/foundation-icons.css" %}" rel="stylesheet"/>
+    <link href="{% static "overview/css/foundation.min.css" %}" rel="stylesheet"/>
+    <link href="{% static "overview/css/foundation-icons.css" %}" rel="stylesheet"/>
     {% endblock %}
 
     {# Custom CSS #}
-    <link rel="stylesheet" href="{% static "css/base.css" %}">
+    <link rel="stylesheet" href="{% static "overview/css/overview.css" %}">
     {% block css %}{% endblock %}
 
     {# Custom head JS #}
@@ -48,14 +48,14 @@
         </div>
     </div>
 
-    <script src="{% static "js/jquery-2.1.4.min.js" %}"></script>
-    <script src="{% static "js/foundation.js" %}"></script>
+    <script src="{% static "overview/js/jquery-2.1.4.min.js" %}"></script>
+    <script src="{% static "overview/js/foundation.js" %}"></script>
     <script>
       $(document).foundation();
     </script>
-    <script src="{% static "js/js.cookie.js" %}"></script>
+    <script src="{% static "overview/js/js.cookie.js" %}"></script>
 
-    <script src="{% static "js/jquery.twbsPagination.js" %}"></script>
-    <script src="{% static "js/scripts.js" %}"></script>
+    <script src="{% static "overview/js/jquery.twbsPagination.js" %}"></script>
+    <script src="{% static "overview/js/scripts.js" %}"></script>
 </body>
 </html>
