@@ -1,0 +1,15 @@
+body, html{
+    min-height: 100%;
+}
+
+.off-canvas{
+    height: 100%;
+}
+
+.off-canvas-content{
+    box-shadow: none;
+}
+
+#main-menu{
+    z-index: 1000;
+}
