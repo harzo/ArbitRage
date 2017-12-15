@@ -1,4 +1,5 @@
 from exchanges_crawler.crawlers.crawlerbase import CrawlerBase
+from exchanges.models import ExchangePair
 from urllib.request import Request, urlopen
 import json
 
@@ -60,4 +61,6 @@ class BitBayCrawler(CrawlerBase):
 
         return last_bid, last_ask
 
-    # def get_orderbooks(self):
+    def get_orderbooks(self):
+        for pair in self.exchange.pairs.all():
+            print(pair)

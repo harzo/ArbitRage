@@ -1,14 +1,23 @@
 from django.test import TestCase
-from exchanges.models import Exchange
+from exchanges.models import Currency, Exchange, ExchangePair
 from exchanges_crawler.crawlers.bitbay_crawler import BitBayCrawler
 
 
 class BitBayCrawlerTestCase(TestCase):
     def setUp(self):
+        Currency.objects.create(name="Dollar", code="USD", sign="$", sign_after=False)
+        Currency.objects.create(name="Złoty", code="PLN", sign="zł")
+        Currency.objects.create(name="Bitcoin", code="BTC", sign="BTC", crypto=True)
+
         Exchange.objects.create(name="BitBay")
         Exchange.objects.create(name="Cex.io")
-        
         self.exchange = Exchange.objects.get(name="BitBay")
+
+        self.btc = Currency.objects.get(code="BTC")
+        self.usd = Currency.objects.get(code="USD")
+
+        ExchangePair.objects.create(exchange=self.exchange, left=self.btc, right=self.usd)
+
         self.orderbook_response = '{"bids":[[17151.01,0.055]],"asks":[[17699.99,0.01529216]]}'
         self.ticker_response = '{"max":18000,"min":16020.1,"last":17150.52,"bid":17152.01,"ask":17699.94,"vwap":17150.52,"average":17150.52,"volume":25.58984462}'
 
@@ -142,3 +151,10 @@ class BitBayCrawlerTestCase(TestCase):
 
         self.assertTrue(result[1]) # "ask":17699.94
         self.assertEquals(result[1], 17699.94)
+
+    def test_get_orderbooks_returns_(self):
+        exchange = self.exchange
+        crawler = BitBayCrawler(exchange)
+        # response = self.orderbook_response
+
+        crawler.get_orderbooks()
