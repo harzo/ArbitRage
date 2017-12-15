@@ -1,5 +1,6 @@
 from exchanges.models import Exchange
 
+
 class CrawlerBase:
 
     def __init__(self, exchange):

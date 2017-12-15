@@ -18,7 +18,8 @@ class Currency(models.Model):
 class Exchange(models.Model):
     name = models.CharField(max_length=200)
     url = models.URLField(max_length=200, null=True)
-    api_scheme = models.CharField(max_length=200, null=True)
+    orderbook_api = models.CharField(max_length=200, null=True)
+    ticker_api = models.CharField(max_length=200, null=True)
 
     def __str__(self):
         return self.name
@@ -28,6 +29,10 @@ class ExchangePair(models.Model):
     exchange = models.ForeignKey(Exchange, on_delete=models.CASCADE, related_name='pairs')
     left = models.ForeignKey(Currency, on_delete=models.CASCADE, related_name='left', null=False)
     right = models.ForeignKey(Currency, on_delete=models.CASCADE, related_name='right', null=False)
+    bids = models.TextField(null=True, blank=True)
+    asks = models.TextField(null=True, blank=True)
+    last_bid = models.FloatField(default=0.0)
+    last_ask = models.FloatField(default=0.0)
 
     def __str__(self):
         return self.exchange.name+': '+self.left.code+'/'+self.right.code
