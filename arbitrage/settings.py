@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'overview',
-    'exchanges'
+    'exchanges',
+    'exchanges_crawler'
 ]
 
 MIDDLEWARE = [
