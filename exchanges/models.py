@@ -17,6 +17,8 @@ class Currency(models.Model):
 
 class Exchange(models.Model):
     name = models.CharField(max_length=200)
+    url = models.URLField(max_length=200)
+    api_scheme = models.CharField(max_length=200)
 
     def __str__(self):
         return self.name
