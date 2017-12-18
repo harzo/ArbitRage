@@ -107,7 +107,7 @@ class BitBayCrawler(CrawlerBase):
 
         return True
 
-    def get_orderbooks(self):
+    async def get_orderbooks(self):
         for pair in self.exchange.pairs.all():
             try:
                 response = self.request_pair_api(
@@ -126,7 +126,7 @@ class BitBayCrawler(CrawlerBase):
             else:
                 print(pair, 'orderbook response failed')
 
-    def get_tickers(self):
+    async def get_tickers(self):
         for pair in self.exchange.pairs.all():
             try:
                 response = self.request_pair_api(
