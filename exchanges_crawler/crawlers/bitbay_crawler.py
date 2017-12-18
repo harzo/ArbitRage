@@ -86,9 +86,29 @@ class BitBayCrawler(CrawlerBase):
 
         return True
 
+    @staticmethod
+    def save_pair_ticker(pair, bid, ask):
+        if type(pair) != ExchangePair:
+            return False
+
+        if not pair.id:
+            return False
+
+        if not bid and not ask:
+            return False
+
+        if bid > 0:
+            pair.last_bid = bid
+
+        if ask > 0:
+            pair.last_ask = ask
+
+        pair.save()
+
+        return True
+
     def get_orderbooks(self):
         for pair in self.exchange.pairs.all():
-
             try:
                 response = self.request_pair_api(
                     self.exchange.orderbook_api,
@@ -96,11 +116,33 @@ class BitBayCrawler(CrawlerBase):
                     pair.right.code
                 )
             except ConnectionError:
-                pass
+                response = None
 
-            bids, asks = BitBayCrawler.parse_pair_orderbook(response)
+            if response:
+                bids, asks = BitBayCrawler.parse_pair_orderbook(response)
 
-            if BitBayCrawler.save_pair_orderbook(pair, bids, asks):
-                print(pair, 'orderbook updated')
+                if BitBayCrawler.save_pair_orderbook(pair, bids, asks):
+                    print(pair, 'orderbook updated')
+            else:
+                print(pair, 'orderbook response failed')
+
+    def get_tickers(self):
+        for pair in self.exchange.pairs.all():
+            try:
+                response = self.request_pair_api(
+                    self.exchange.ticker_api,
+                    pair.left.code,
+                    pair.right.code
+                )
+            except ConnectionError:
+                response = None
+
+            if response:
+                bid, ask = BitBayCrawler.parse_pair_ticker(response)
+
+                if BitBayCrawler.save_pair_ticker(pair, bid, ask):
+                    print(pair, 'ticker updated')
+            else:
+                print(pair, 'ticker response failed')
 
 
