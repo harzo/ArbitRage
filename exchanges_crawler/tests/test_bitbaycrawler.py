@@ -26,6 +26,9 @@ class BitBayCrawlerTestCase(TestCase):
         self.saved_ticker_bid = 17152.01
         self.saved_ticker_ask = 17699.94
 
+        self.orderbook_api = "https://bitbay.net/API/Public/{}{}/orderbook.json"
+        self.ticker_api = "https://bitbay.net/API/Public/{}{}/ticker.json"
+
     def test_crawler_is_properly_created(self):
         exchange = self.exchange
 
@@ -75,7 +78,7 @@ class BitBayCrawlerTestCase(TestCase):
 
     def test_request_pair_api_returns_proper_result_for_orderbook_api(self):
         exchange = self.exchange
-        exchange.orderbook_api = 'https://bitbay.net/API/Public/{}{}/orderbook.json'
+        exchange.orderbook_api = self.orderbook_api
 
         left, right = 'BTC', 'USD'
 
@@ -86,7 +89,7 @@ class BitBayCrawlerTestCase(TestCase):
 
     def test_request_pair_api_returns_proper_result_for_ticker_api(self):
         exchange = self.exchange
-        exchange.ticker_api = 'https://bitbay.net/API/Public/{}{}/ticker.json'
+        exchange.ticker_api = self.ticker_api
 
         left, right = 'BTC', 'USD'
 
@@ -210,24 +213,24 @@ class BitBayCrawlerTestCase(TestCase):
         self.assertEqual(exchange_pair.last_bid, self.saved_ticker_bid)
         self.assertEqual(exchange_pair.last_ask, self.saved_ticker_ask)
 
-    def test_get_orderbooks_change_exchange_pairs_objects(self):
-        exchange = self.exchange
-        exchange.orderbook_api = 'https://bitbay.net/API/Public/{}{}/orderbook.json'
-        crawler = BitBayCrawler(exchange)
-
-        crawler.get_orderbooks()
-
-        for pair in crawler.exchange.pairs.all():
-            self.assertTrue(pair.bids)
-            self.assertTrue(pair.asks)
-
-    def test_get_tickers_change_exchange_pairs_objects(self):
-        exchange = self.exchange
-        exchange.ticker_api = 'https://bitbay.net/API/Public/{}{}/ticker.json'
-        crawler = BitBayCrawler(exchange)
-
-        crawler.get_tickers()
-
-        for pair in crawler.exchange.pairs.all():
-            self.assertTrue(pair.last_bid > 0)
-            self.assertTrue(pair.last_ask > 0)
+    # def test_get_orderbooks_change_exchange_pairs_objects(self):
+    #     exchange = self.exchange
+    #     exchange.orderbook_api = 'https://bitbay.net/API/Public/{}{}/orderbook.json'
+    #     crawler = BitBayCrawler(exchange)
+    #
+    #     crawler.get_orderbooks()
+    #
+    #     for pair in crawler.exchange.pairs.all():
+    #         self.assertTrue(pair.bids)
+    #         self.assertTrue(pair.asks)
+    #
+    # def test_get_tickers_change_exchange_pairs_objects(self):
+    #     exchange = self.exchange
+    #     exchange.ticker_api = 'https://bitbay.net/API/Public/{}{}/ticker.json'
+    #     crawler = BitBayCrawler(exchange)
+    #
+    #     crawler.get_tickers()
+    #
+    #     for pair in crawler.exchange.pairs.all():
+    #         self.assertTrue(pair.last_bid > 0)
+    #         self.assertTrue(pair.last_ask > 0)

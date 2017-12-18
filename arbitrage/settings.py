@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'overview',
     'exchanges',
-    'exchanges_crawler'
+    'exchanges_crawler',
+    'django_crontab'
 ]
 
 MIDDLEWARE = [
@@ -121,3 +122,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+CRONJOBS = [
+    ('*/5 * * * *', 'exchanges_crawler.runner.update_all')
+]

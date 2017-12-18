@@ -3,25 +3,26 @@ from exchanges.models import ExchangePair
 import json
 
 
-class BitBayCrawler(CrawlerBase):
+class BitstampCrawler(CrawlerBase):
     """
-    BitBay exchange crawler.
-    Exchange url: https://bitbay.net
+    Bitstamp exchange crawler.
+    Exchange url: https://www.bitstamp.net/
 
-    Orderbook api: https://bitbay.net/API/Public/{}{}/orderbook.json
-    Orderbook eg: {"bids":[[1519.00,0.07],[1513.00,0.13]], "asks":[[1529.00,0.09],[1531.00,0.12]]}
+    Orderbook api: https://www.bitstamp.net/api/v2/order_book/{}{}
+    Orderbook eg: {"timestamp":1459161809, "bids": [[250.00,0.02000000]], "asks": [[280.00,20.51246433]] }
 
-    Ticker api: https://bitbay.net/API/Public/{}{}/ticker.json
-    Ticker eg: {"max":4500,"min":1465,"last":1533,"bid":1513,"ask":1542,"vwap":1524.42,
-                "average":1545.67,"volume":4.54042857}
+    Ticker api: https://www.bitstamp.net/api/v2/ticker/{}{}
+    Ticker eg: {"high": "19310.67", "last": "18708.60", "timestamp": "1513614037", "bid": "18690.00",
+                "vwap": "18723.62", "volume": "15137.32985455", "low": "17835.20", "ask": "18710.65",
+                "open": "18953.00"}
     """
 
-    expected_name = 'BitBay'
+    expected_name = 'Bitstamp'
 
     def __init__(self, exchange):
         super().__init__(exchange)
 
-        if self.exchange.name != BitBayCrawler.expected_name:
+        if self.exchange.name != BitstampCrawler.expected_name:
             raise TypeError('Mismatched Exchange')
 
     @staticmethod
@@ -106,9 +107,9 @@ class BitBayCrawler(CrawlerBase):
                 response = None
 
             if response:
-                bids, asks = BitBayCrawler.parse_pair_orderbook(response)
+                bids, asks = BitstampCrawler.parse_pair_orderbook(response)
 
-                if BitBayCrawler.save_pair_orderbook(pair, bids, asks):
+                if BitstampCrawler.save_pair_orderbook(pair, bids, asks):
                     print(pair, 'orderbook updated')
             else:
                 print(pair, 'orderbook response failed')
@@ -125,9 +126,9 @@ class BitBayCrawler(CrawlerBase):
                 response = None
 
             if response:
-                bid, ask = BitBayCrawler.parse_pair_ticker(response)
+                bid, ask = BitstampCrawler.parse_pair_ticker(response)
 
-                if BitBayCrawler.save_pair_ticker(pair, bid, ask):
+                if BitstampCrawler.save_pair_ticker(pair, bid, ask):
                     print(pair, 'ticker updated')
             else:
                 print(pair, 'ticker response failed')

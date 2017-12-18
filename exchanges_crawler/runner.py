@@ -2,6 +2,8 @@ import asyncio
 import sys
 from exchanges.models import Exchange
 from exchanges_crawler.crawlers.bitbay_crawler import BitBayCrawler
+from exchanges_crawler.crawlers.cexio_crawler import CexioCrawler
+from exchanges_crawler.crawlers.bitstamp_crawler import BitstampCrawler
 
 
 def init_crawlers():
