@@ -3,6 +3,7 @@ from exchanges.models import ExchangePair
 from urllib.request import Request, urlopen
 import json
 
+
 class BitBayCrawler(CrawlerBase):
     """
     BitBay exchange crawler.
@@ -20,7 +21,8 @@ class BitBayCrawler(CrawlerBase):
         if self.exchange.name != BitBayCrawler.expected_name:
             raise TypeError('Mismatched Exchange')
 
-    def request_pair_api(self, api, left, right):
+    @staticmethod
+    def request_pair_api(api, left, right):
         if not api:
             return ""
 
@@ -29,38 +31,76 @@ class BitBayCrawler(CrawlerBase):
         try:
             req = Request(api_url, None, headers={'User-Agent': 'Mozilla/5.0'})
             response = urlopen(req)
-            result = str(response.read().decode(response.info().get_param('charset') or 'utf-8')).replace('\'', '"')
+            result = response.read().decode(response.info().get_param('charset') or 'utf-8')
 
             return result
         except:
-            raise ConnectionError('Request failed for {} ({}/{})'.format(self.exchange.name, left, right))
+            raise ConnectionError('Api request failed!')
 
-    def parse_pair_orderbook(self, response):
+    @staticmethod
+    def parse_pair_orderbook(response):
         bids = []
         asks = []
 
         if response:
-            orderbook = json.loads(response)
+            orderbook = json.loads(str(response).replace('\'', '"'))
             if "bids" in orderbook:
-                bids = orderbook["bids"] or []
+                bids = orderbook["bids"]
             if "asks" in orderbook:
-                asks = orderbook["asks"] or []
+                asks = orderbook["asks"]
 
         return bids, asks
 
-    def parse_pair_ticker(self, response):
+    @staticmethod
+    def parse_pair_ticker(response):
         last_bid = None
         last_ask = None
 
         if response:
             ticker = json.loads(response)
             if "bid" in ticker:
-                last_bid = ticker["bid"] or []
+                last_bid = ticker["bid"]
             if "ask" in ticker:
-                last_ask = ticker["ask"] or []
+                last_ask = ticker["ask"]
 
         return last_bid, last_ask
 
+    @staticmethod
+    def save_pair_orderbook(pair, bids, asks):
+        if type(pair) != ExchangePair:
+            return False
+
+        if not pair.id:
+            return False
+
+        if not bids and not asks:
+            return False
+
+        if type(bids) == list:
+            pair.bids = json.dumps(bids)
+
+        if type(asks) == list:
+            pair.asks = json.dumps(asks)
+
+        pair.save()
+
+        return True
+
     def get_orderbooks(self):
         for pair in self.exchange.pairs.all():
-            print(pair)
+
+            try:
+                response = self.request_pair_api(
+                    self.exchange.orderbook_api,
+                    pair.left.code,
+                    pair.right.code
+                )
+            except ConnectionError:
+                pass
+
+            bids, asks = BitBayCrawler.parse_pair_orderbook(response)
+
+            if BitBayCrawler.save_pair_orderbook(pair, bids, asks):
+                print(pair, 'orderbook updated')
+
+
