@@ -36,11 +36,15 @@ class RunnerTestCase(TestCase):
         Exchange.objects.create(name="Bitstamp",
                                 orderbook_api='https://www.bitstamp.net/api/v2/order_book/{}{}',
                                 ticker_api='https://www.bitstamp.net/api/v2/ticker/{}{}')
+        Exchange.objects.create(name="Kraken",
+                                orderbook_api='https://api.kraken.com/0/public/Depth?pair={}{}',
+                                ticker_api='https://api.kraken.com/0/public/Ticker?pair={}{}')
 
         exchanges = [
             Exchange.objects.get(name="BitBay"),
             Exchange.objects.get(name="Cexio"),
-            Exchange.objects.get(name="Bitstamp")
+            Exchange.objects.get(name="Kraken"),
+            Exchange.objects.get(name="Bitstamp"),
         ]
 
         btc = Currency.objects.get(code="BTC")

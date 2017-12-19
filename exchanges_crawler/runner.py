@@ -4,6 +4,7 @@ from exchanges.models import Exchange
 from exchanges_crawler.crawlers.bitbay_crawler import BitBayCrawler
 from exchanges_crawler.crawlers.cexio_crawler import CexioCrawler
 from exchanges_crawler.crawlers.bitstamp_crawler import BitstampCrawler
+from exchanges_crawler.crawlers.kraken_crawler import KrakenCrawler
 
 
 def init_crawlers():

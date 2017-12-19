@@ -44,7 +44,7 @@ class BitBayCrawler(CrawlerBase):
         last_ask = None
 
         if response:
-            ticker = json.loads(response)
+            ticker = json.loads(str(response).replace('\'', '"'))
             if "bid" in ticker:
                 last_bid = float(ticker["bid"])
             if "ask" in ticker:

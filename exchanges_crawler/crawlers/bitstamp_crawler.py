@@ -95,13 +95,17 @@ class BitstampCrawler(CrawlerBase):
 
         return True
 
+    @staticmethod
+    def fix_currency_code(code):
+        return code.lower()
+
     async def get_orderbooks(self):
         for pair in self.exchange.pairs.all():
             try:
                 response = self.request_pair_api(
                     self.exchange.orderbook_api,
-                    pair.left.code,
-                    pair.right.code
+                    BitstampCrawler.fix_currency_code(pair.left.code),
+                    BitstampCrawler.fix_currency_code(pair.right.code),
                 )
             except ConnectionError:
                 response = None
@@ -119,8 +123,8 @@ class BitstampCrawler(CrawlerBase):
             try:
                 response = self.request_pair_api(
                     self.exchange.ticker_api,
-                    pair.left.code,
-                    pair.right.code
+                    BitstampCrawler.fix_currency_code(pair.left.code),
+                    BitstampCrawler.fix_currency_code(pair.right.code),
                 )
             except ConnectionError:
                 response = None
