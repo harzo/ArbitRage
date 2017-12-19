@@ -12,7 +12,7 @@ class CurrencyAdmin(admin.ModelAdmin):
 
 
 class ExchangeAdmin(admin.ModelAdmin):
-    fields = ['name']
+    fields = ['name', 'url', 'orderbook_api', 'ticker_api']
     inlines = [ExchangePairInline]
 
 

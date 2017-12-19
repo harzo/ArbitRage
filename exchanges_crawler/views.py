@@ -1,3 +1,10 @@
-from django.shortcuts import render
+from django.http import HttpResponse
+from exchanges_crawler.runner import update_all
 
-# Create your views here.
+
+def dev_update(request):
+    update_all()
+
+    html = "<html><body><p>Updated</p></body></html>"
+
+    return HttpResponse(html)
