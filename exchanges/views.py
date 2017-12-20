@@ -1,8 +1,13 @@
 from django.shortcuts import render
 from exchanges.models import Currency
+from django.views.decorators.http import require_http_methods
+from django.shortcuts import get_object_or_404
 
 
-def spreads(request):
+@require_http_methods(["GET"])
+def spreads(request, left="BTC", right="USD"):
+    get_object_or_404(Currency, code=left)
+    get_object_or_404(Currency, code=right)
 
     currencies = Currency.objects.all()
 

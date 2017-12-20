@@ -1,0 +1,49 @@
+{% extends "overview/base.html" %}
+
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "exchanges/css/box.css" %}">
+{% endblock %}
+
+{% block top_bar %}
+        <h4>Spreads</h4>
+{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="#">Spreads</a></li>
+    <!--<li class="disabled">Gene Splicing</li>-->
+{% endblock %}
+
+{% block base_body %}
+
+<div class="box">
+	<div class="box-header bg-transparent">
+		<!-- tools box -->
+		<div class="pull-right box-tools"> <span class="box-btn" data-widget="collapse"><i class="icon-minus"></i>
+		</span> <span class="box-btn" data-widget="remove"><i class="icon-cross"></i>
+		</span> </div>
+		<h3 class="box-title">
+			<i class="fi-bookmark"></i>
+			<span>TITLEHERE</span>
+		</h3>
+	</div>
+
+	<div class="box-body " style="display: block;">
+        <p>test</p>
+	</div>
+</div>
+
+    <ul>
+        {% for currency in currencies %}
+        <li>{{ currency.code }}</li>
+        {% endfor %}
+    </ul>
+
+    <ul>
+        {% for currency in currencies %}
+            {% if currency.crypto %}<li>{{ currency.code }}</li>{% endif %}
+        {% endfor %}
+    </ul>
+
+{% endblock %}

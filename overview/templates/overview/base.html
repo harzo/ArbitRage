@@ -26,8 +26,11 @@
 <body {% block body_attr %}{% endblock %}>
     <div class="off-canvas-wrapper">
         <div class="off-canvas-wrapper-inner" data-off-canvas-wrapper>
-            <div class="off-canvas position-left reveal-for-large" id="main-menu" data-off-canvas>
-                <div class="row column">
+            <div class="off-canvas position-left reveal-for-large main-menu" data-off-canvas>
+                <div class="row column show-for-large title">
+                    <h3>ArbitRage</h3>
+                </div>
+                <div class="row">
                     {% include "overview/mainmenu.html" %}
                 </div>
             </div>
@@ -40,8 +43,22 @@
                     </div>
                 </div>
 
-                {% block base_body %}{% endblock %}
+                <div class="row column top-bar">
+                    {% block top_bar %}{% endblock %}
+                </div>
 
+                <div class="row column top-bread">
+                    <nav aria-label="You are here:" role="navigation">
+                        <ul class="breadcrumbs">
+                            <li><a href="#"><i class="fi-home"></i></a></li>
+                            {% block breadcrumbs %}{% endblock %}
+                        </ul>
+                    </nav>
+                </div>
+
+                <div class="row column">
+                    {% block base_body %}{% endblock %}
+                </div>
             </div>
         </div>
     </div>
