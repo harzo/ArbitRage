@@ -65,7 +65,31 @@
             </div>
 
             <div class="box-body " style="display: block;">
-                <p>test</p>
+            <table class="stack spread-table">
+                <thead>
+                    <tr>
+                        <th>Buy</th>
+                        <th>Sell</th>
+                        <th>Spread</th>
+                        <th>eg. Profit</th>
+                        <th>%</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for spread in spreads %}
+                    <tr>
+                        <td>{{ spread.buy_exchange }}</td>
+                        <td>{{ spread.sell_exchange }}</td>
+                        <td>{% if not right.sign_after %}{{ right.sign }}{% endif %}
+                            <strong>{{ spread.spread|floatformat:2 }}</strong>
+                            {% if right.sign_after %}{{ right.sign }}{% endif %}
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
             </div>
         </div>
     </div>
