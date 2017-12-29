@@ -1,49 +1,102 @@
 {% extends "overview/base.html" %}
 
-{% load static %}
+{% load static exchanges_tags %}
 
 {% block css %}
+    <link rel="stylesheet" href="{% static "exchanges/css/exchanges.css" %}">
     <link rel="stylesheet" href="{% static "exchanges/css/box.css" %}">
 {% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="https://files.coinmarketcap.com/static/widget/currency.js"></script>
+{% endblock %}
+
+{% block body_attr %}class="spreads"{% endblock %}
 
 {% block top_bar %}
         <h4>Spreads</h4>
 {% endblock %}
 
 {% block breadcrumbs %}
-    <li><a href="#">Spreads</a></li>
-    <!--<li class="disabled">Gene Splicing</li>-->
+    <li><a href="{% url 'spreads' %}">Spreads</a></li>
+    {% if left and right %}
+        <li class="disabled strong">{{ left.code }}/{{ right.code }}</li>
+    {% endif %}
 {% endblock %}
 
 {% block base_body %}
 
-<div class="box">
-	<div class="box-header bg-transparent">
-		<!-- tools box -->
-		<div class="pull-right box-tools"> <span class="box-btn" data-widget="collapse"><i class="icon-minus"></i>
-		</span> <span class="box-btn" data-widget="remove"><i class="icon-cross"></i>
-		</span> </div>
-		<h3 class="box-title">
-			<i class="fi-bookmark"></i>
-			<span>TITLEHERE</span>
-		</h3>
-	</div>
-
-	<div class="box-body " style="display: block;">
-        <p>test</p>
-	</div>
+<ul class="tabs" data-tabs id="pairs-tabs">
+{% for name, codes in pair_groups.items %}
+    <li class="tabs-title{% if name == left.code %} is-active{% endif %}">
+        <a href="#{{name}}_group" aria-selected="true">
+            <img src="https://files.coinmarketcap.com/static/img/coins/16x16/{{ name|code_to_name|lower }}.png" alt="" />
+            <span>{{name}}</span>
+        </a>
+    </li>
+{% endfor %}
+</ul>
+<div class="tabs-content" data-tabs-content="pairs-tabs">
+{% for name, codes in pair_groups.items %}
+    <div class="tabs-panel {% if name == left.code %}is-active{% endif %}" id="{{name}}_group">
+        <ul class="group-codes">
+        {% for code in codes %}
+            <li class="code-title"><a href="{% url 'spreads' left=name right=code %}"{% if name == left.code and code == right.code %} aria-selected="true"{% endif %}>
+                {{ code }}
+            </a></li>
+        {% endfor %}
+        </ul>
+    </div>
+{% endfor %}
 </div>
 
-    <ul>
-        {% for currency in currencies %}
-        <li>{{ currency.code }}</li>
-        {% endfor %}
-    </ul>
+<div class="row">
+    <div class="small-12 medium-12 large-6 columns">
+        <div class="box">
+            <div class="box-header bg-transparent">
+                <!-- tools box -->
+                <div class="pull-right box-tools"> <span class="box-btn" data-widget="collapse"><i class="icon-minus"></i>
+                </span> <span class="box-btn" data-widget="remove"><i class="icon-cross"></i>
+                </span> </div>
+                <h3 class="box-title">
+                    <i class="fi-bookmark"></i>
+                    <span>Spreads</span>
+                </h3>
+            </div>
 
-    <ul>
-        {% for currency in currencies %}
-            {% if currency.crypto %}<li>{{ currency.code }}</li>{% endif %}
-        {% endfor %}
-    </ul>
+            <div class="box-body " style="display: block;">
+                <p>test</p>
+            </div>
+        </div>
+    </div>
+    <div class="small-12 medium-12 large-6 columns">
+        <div class="box">
+            <div class="box-header bg-transparent">
+                <!-- tools box -->
+                <div class="pull-right box-tools"> <span class="box-btn" data-widget="collapse"><i class="icon-minus"></i>
+                </span> <span class="box-btn" data-widget="remove"><i class="icon-cross"></i>
+                </span> </div>
+                <h3 class="box-title">
+                    <i class="fi-bookmark"></i>
+                    <span>coinmarketcap.com data</span>
+                </h3>
+            </div>
+
+            <div class="box-body " style="display: block;">
+                <div class="row">
+                    <div class="large-6 columns">
+                        <div class="coinmarketcap-currency-widget" data-currency="{{ left.name|lower }}" data-base="USD" data-secondary="" data-ticker="true" data-rank="true" data-marketcap="true" data-volume="true" data-stats="USD" data-statsticker="false"></div>
+                    </div>
+                    <div class="large-6 columns">
+                        {% if right.crypto %}
+                        <div class="coinmarketcap-currency-widget" data-currency="{{ left.name|lower }}" data-base="USD" data-secondary="" data-ticker="true" data-rank="true" data-marketcap="true" data-volume="true" data-stats="USD" data-statsticker="false"></div>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

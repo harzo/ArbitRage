@@ -21,7 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('overview.urls')),
     path('spreads/', exchanges_views.spreads, name="spreads"),
-    path('spreads/<left>/<right>', exchanges_views.spreads),
+    path('spreads/<left>/<right>', exchanges_views.spreads, name="spreads"),
     path('calculator/', exchanges_views.calculator, name="calculator"),
     path('update/', include('exchanges_crawler.urls')),
 ]

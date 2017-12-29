@@ -1,0 +1,29 @@
+body.spreads .tabs-content .tabs-panel{
+    padding: 0;
+}
+
+body.spreads .tabs-content{
+    float: left;
+    width: 100%;
+}
+
+.group-codes{
+    list-style-type: none;
+    margin: 0;
+}
+
+.group-codes .code-title{
+    float: left;
+}
+
+.code-title>a:focus, .code-title>a:hover, .code-title>a[aria-selected=true] {
+    background: #e6e6e6;
+}
+
+body.spreads .tabs-content .tabs-panel .code-title>a{
+    display: block;
+    padding: 1.25rem 2.035rem;
+    line-height: 1;
+    font-size: 12px;
+    color: #2199e8;
+}
