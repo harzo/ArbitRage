@@ -20,6 +20,7 @@ class Exchange(models.Model):
     url = models.URLField(max_length=200, null=True)
     orderbook_api = models.CharField(max_length=200, null=True)
     ticker_api = models.CharField(max_length=200, null=True)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -33,6 +34,7 @@ class ExchangePair(models.Model):
     asks = models.TextField(null=True, blank=True)
     last_bid = models.FloatField(default=0.0)
     last_ask = models.FloatField(default=0.0)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.exchange.name+': '+self.left.code+'/'+self.right.code

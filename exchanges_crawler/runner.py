@@ -5,10 +5,11 @@ from exchanges_crawler.crawlers.bitbay_crawler import BitBayCrawler
 from exchanges_crawler.crawlers.cexio_crawler import CexioCrawler
 from exchanges_crawler.crawlers.bitstamp_crawler import BitstampCrawler
 from exchanges_crawler.crawlers.kraken_crawler import KrakenCrawler
+from exchanges_crawler.crawlers.fiat_crawler import FiatCrawler
 
 
 def init_crawlers():
-    exchanges = Exchange.objects.all()
+    exchanges = Exchange.objects.filter(active=True).all()
     crawlers = []
     for exchange in exchanges:
         try:
@@ -19,6 +20,19 @@ def init_crawlers():
         crawlers.append(crawler_class(exchange))
 
     return crawlers
+
+
+# Add to settings.py
+# CRONJOBS = [
+#     ('*/5 * * * *', 'exchanges_crawler.runner.update_fiats')
+# ]
+def update_fiats():
+    exchange = Exchange.objects.filter(name="Fiat").first()
+    crawlers = []
+    if exchange:
+        crawlers.append(FiatCrawler(exchange))
+
+    update_tickers(crawlers)
 
 
 # Add to settings.py
