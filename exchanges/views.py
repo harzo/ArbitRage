@@ -47,12 +47,17 @@ def calculate_ticker_spreads(pairs, profit_base):
             spread = pairs[pair_idx2].last_bid - pairs[pair_idx].last_ask
 
             if spread > 0:
-                spreads.append({
-                    'buy_exchange': pairs[pair_idx].exchange,
-                    'sell_exchange': pairs[pair_idx2].exchange,
-                    'spread': spread,
-                    'profit': calculate_basic_profit(profit_base, pairs[pair_idx], pairs[pair_idx2])
-                })
+                profit = calculate_basic_profit(profit_base, pairs[pair_idx], pairs[pair_idx2])
+
+                if profit > 0:
+                    spreads.append({
+                        'buy_exchange': pairs[pair_idx].exchange,
+                        'sell_exchange': pairs[pair_idx2].exchange,
+                        'buy_rate': pairs[pair_idx].last_ask,
+                        'sell_rate': pairs[pair_idx2].last_bid,
+                        'spread': spread,
+                        'profit': profit
+                    })
 
     spreads.sort(key=lambda x: -x['profit'])
 
@@ -103,7 +108,7 @@ def calculate_orderbook_buy_value(pair, right_amount):
             amount_left -= ask_amount
             value += b_value
 
-    return value
+    return value*(1-pair.exchange.taker_fee)
 
 
 def calculate_orderbook_sell_amount(pair, left_value):

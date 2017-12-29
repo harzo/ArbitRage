@@ -25,31 +25,31 @@
 {% endblock %}
 
 {% block base_body %}
-
-<ul class="tabs" data-tabs id="pairs-tabs">
-{% for name, codes in pair_groups.items %}
-    <li class="tabs-title{% if name == left.code %} is-active{% endif %}">
-        <a href="#{{name}}_group" aria-selected="true">
-            <img src="https://files.coinmarketcap.com/static/img/coins/16x16/{{ name|code_to_name|lower }}.png" alt="" />
-            <span>{{name}}</span>
-        </a>
-    </li>
-{% endfor %}
-</ul>
-<div class="tabs-content" data-tabs-content="pairs-tabs">
-{% for name, codes in pair_groups.items %}
-    <div class="tabs-panel {% if name == left.code %}is-active{% endif %}" id="{{name}}_group">
-        <ul class="group-codes">
-        {% for code in codes %}
-            <li class="code-title"><a href="{% url 'spreads' left=name right=code %}"{% if name == left.code and code == right.code %} aria-selected="true"{% endif %}>
-                {{ code }}
-            </a></li>
-        {% endfor %}
-        </ul>
+<div class="row column">
+    <ul class="tabs" data-tabs id="pairs-tabs">
+    {% for name, codes in pair_groups.items %}
+        <li class="tabs-title{% if name == left.code %} is-active{% endif %}">
+            <a href="#{{name}}_group" aria-selected="true">
+                <img src="https://files.coinmarketcap.com/static/img/coins/16x16/{{ name|code_to_name|slugify }}.png" alt="" />
+                <span>{{name}}</span>
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+    <div class="tabs-content" data-tabs-content="pairs-tabs">
+    {% for name, codes in pair_groups.items %}
+        <div class="tabs-panel {% if name == left.code %}is-active{% endif %}" id="{{name}}_group">
+            <ul class="group-codes">
+            {% for code in codes %}
+                <li class="code-title"><a href="{% url 'spreads' left=name right=code %}"{% if name == left.code and code == right.code %} aria-selected="true"{% endif %}>
+                    {{ code }}
+                </a></li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
     </div>
-{% endfor %}
 </div>
-
 <div class="row">
     <div class="small-12 medium-12 large-6 columns">
         <div class="box">
@@ -65,13 +65,14 @@
             </div>
 
             <div class="box-body " style="display: block;">
+            {% if spreads %}
             <table class="stack spread-table">
                 <thead>
                     <tr>
                         <th>Buy</th>
                         <th>Sell</th>
                         <th>Spread</th>
-                        <th>Rate %</th>
+                        <th>Buy rate %</th>
                         <th>
                             <span data-tooltip aria-haspopup="true" class="has-tip top" data-disable-hover="false" tabindex="2"
                                   title="Basic profit example calculated for {{ profit_base|currency_format:right|currency_sign:right }}">
@@ -83,12 +84,12 @@
                 <tbody>
                 {% for spread in spreads %}
                     <tr>
-                        <td>{{ spread.buy_exchange }}</td>
-                        <td>{{ spread.sell_exchange }}</td>
+                        <td>{{ spread.buy_exchange.display_name }}</td>
+                        <td>{{ spread.sell_exchange.display_name }}</td>
                         <td>
                             <strong>{{ spread.spread|currency_format:right|currency_sign:right }}</strong>
                         </td>
-                        <td></td>
+                        <td>{{ spread.spread|divide:spread.buy_rate|multiply:100|floatformat:2 }}%</td>
                         {% with spread.profit|divide:profit_base|multiply:100 as percent_profit %}
                         <td class="{% if percent_profit >= 5 %}gte5pc{% endif %}{% if percent_profit >= 10 %} gte10pc{% endif %}">
                             {{ spread.profit|currency_format:right|currency_sign:right }} ({{ percent_profit|floatformat:2 }}%)
@@ -98,6 +99,9 @@
                 {% endfor %}
                 </tbody>
             </table>
+            {% else %}
+            <p>Currently there is no positive spreads between watched exchanges. Come back later.</p>
+            {% endif %}
             </div>
         </div>
     </div>
@@ -117,11 +121,11 @@
             <div class="box-body " style="display: block;">
                 <div class="row">
                     <div class="large-6 columns">
-                        <div class="coinmarketcap-currency-widget" data-currency="{{ left.name|lower }}" data-base="USD" data-secondary="" data-ticker="true" data-rank="true" data-marketcap="true" data-volume="true" data-stats="USD" data-statsticker="false"></div>
+                        <div class="coinmarketcap-currency-widget" data-currency="{{ left.name|slugify }}" data-base="USD" data-secondary="" data-ticker="true" data-rank="true" data-marketcap="true" data-volume="true" data-stats="USD" data-statsticker="false"></div>
                     </div>
                     <div class="large-6 columns">
                         {% if right.crypto %}
-                        <div class="coinmarketcap-currency-widget" data-currency="{{ right.name|lower }}" data-base="USD" data-secondary="" data-ticker="true" data-rank="true" data-marketcap="true" data-volume="true" data-stats="USD" data-statsticker="false"></div>
+                        <div class="coinmarketcap-currency-widget" data-currency="{{ right.name|slugify }}" data-base="USD" data-secondary="" data-ticker="true" data-rank="true" data-marketcap="true" data-volume="true" data-stats="USD" data-statsticker="false"></div>
                         {% endif %}
                     </div>
                 </div>

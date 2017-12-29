@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Currency(models.Model):
@@ -17,9 +18,12 @@ class Currency(models.Model):
 
 class Exchange(models.Model):
     name = models.CharField(max_length=200)
+    display_name = models.CharField(max_length=200)
     url = models.URLField(max_length=200, null=True)
     orderbook_api = models.CharField(max_length=200, null=True)
     ticker_api = models.CharField(max_length=200, null=True)
+    maker_fee = models.FloatField(default=0.0, validators=[MinValueValidator(0.0), MaxValueValidator(1.0)])
+    taker_fee = models.FloatField(default=0.0, validators=[MinValueValidator(0.0), MaxValueValidator(1.0)])
     active = models.BooleanField(default=True)
 
     def __str__(self):
