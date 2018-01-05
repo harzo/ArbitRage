@@ -1,5 +1,7 @@
 from exchanges.models import Exchange
 from urllib.request import Request, urlopen
+from exchanges_crawler.models import ExchangePairSettings
+import datetime
 
 
 class CrawlerBase:
@@ -25,3 +27,12 @@ class CrawlerBase:
             return result
         except:
             raise ConnectionError('Api request failed!')
+
+    @staticmethod
+    def need_update(pair):
+        pair_settings = ExchangePairSettings.objects.filter(left=pair.left, right=pair.right).first()
+        update_frequency = pair_settings.update_frequency or 30
+
+        need = datetime.datetime.now() - datetime.timedelta(minutes=update_frequency) >= pair.updated
+        print("Dont need")
+        return need
