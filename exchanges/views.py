@@ -90,7 +90,10 @@ def calculate_basic_profit(amount, buy_pair, sell_pair):
 
 
 def calculate_orderbook_buy_value(pair, right_amount):
-    asks = eval(pair.asks)
+    try:
+        asks = eval(pair.asks)
+    except SyntaxError:
+        return 0
 
     amount_left = right_amount
     value = 0
@@ -112,7 +115,10 @@ def calculate_orderbook_buy_value(pair, right_amount):
 
 
 def calculate_orderbook_sell_amount(pair, left_value):
-    bids = eval(pair.bids)
+    try:
+        bids = eval(pair.bids)
+    except SyntaxError:
+        return 0
 
     value_left = left_value
     amount = 0

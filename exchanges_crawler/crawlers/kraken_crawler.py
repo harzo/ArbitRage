@@ -122,6 +122,9 @@ class KrakenCrawler(CrawlerBase):
 
     async def get_orderbooks(self):
         for pair in self.exchange.pairs.all():
+            if not CrawlerBase.need_update(pair):
+                continue
+
             try:
                 response = self.request_pair_api(
                     self.exchange.orderbook_api,

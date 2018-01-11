@@ -24,29 +24,47 @@ def init_crawlers():
 
 # Add to settings.py
 # CRONJOBS = [
-#     ('*/5 * * * *', 'exchanges_crawler.runner.update_fiats')
+#     ('0 */6 * * *', 'exchanges_crawler.runner.update_fiats')
 # ]
-def update_fiats():
+def update_fiats_runner():
     exchange = Exchange.objects.filter(name="Fiat").first()
     crawlers = []
     if exchange:
         crawlers.append(FiatCrawler(exchange))
 
-    update_tickers(crawlers)
+    _update_tickers(crawlers)
 
 
 # Add to settings.py
 # CRONJOBS = [
-#     ('*/5 * * * *', 'exchanges_crawler.runner.update_all')
+#     ('*/3 * * * *', 'exchanges_crawler.runner.update_tickers_runner')
 # ]
-def update_all():
+def update_tickers_runner():
+    crawlers = init_crawlers()
+    _update_tickers(crawlers)
+
+
+# Add to settings.py
+# CRONJOBS = [
+#     ('*/3 * * * *', 'exchanges_crawler.runner.update_orderbooks_runner')
+# ]
+def update_orderbooks_runner():
+    crawlers = init_crawlers()
+    _update_orderbooks(crawlers)
+
+
+# Add to settings.py
+# CRONJOBS = [
+#     ('*/3 * * * *', 'exchanges_crawler.runner.update_all_runner')
+# ]
+def update_all_runner():
     crawlers = init_crawlers()
 
-    update_orderbooks(crawlers)
-    update_tickers(crawlers)
+    _update_orderbooks(crawlers)
+    _update_tickers(crawlers)
 
 
-def update_orderbooks(crawlers):
+def _update_orderbooks(crawlers):
     if sys.platform == 'win32':
         loop = asyncio.ProactorEventLoop()
     else:
@@ -63,7 +81,7 @@ def update_orderbooks(crawlers):
         loop.close()
 
 
-def update_tickers(crawlers):
+def _update_tickers(crawlers):
     if sys.platform == 'win32':
         loop = asyncio.ProactorEventLoop()
     else:

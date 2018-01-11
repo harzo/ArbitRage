@@ -1,9 +1,9 @@
 from django.http import HttpResponse
-from exchanges_crawler.runner import update_all, update_fiats
+from exchanges_crawler.runner import update_all_runner, update_fiats_runner
 
 
 def dev_update(request):
-    update_all()
+    update_all_runner()
 
     html = "<html><body><p>Updated</p></body></html>"
 
@@ -11,7 +11,7 @@ def dev_update(request):
 
 
 def dev_fiat_update(request):
-    update_fiats()
+    update_fiats_runner()
 
     html = "<html><body><p>Updated</p></body></html>"
 

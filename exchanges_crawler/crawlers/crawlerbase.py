@@ -1,6 +1,7 @@
 from exchanges.models import Exchange
 from urllib.request import Request, urlopen
 from exchanges_crawler.models import ExchangePairSettings
+from django.utils import timezone
 import datetime
 
 
@@ -31,8 +32,13 @@ class CrawlerBase:
     @staticmethod
     def need_update(pair):
         pair_settings = ExchangePairSettings.objects.filter(left=pair.left, right=pair.right).first()
-        update_frequency = pair_settings.update_frequency or 30
+        update_frequency = 30
 
-        need = datetime.datetime.now() - datetime.timedelta(minutes=update_frequency) >= pair.updated
-        print("Dont need")
+        if not pair_settings:
+            ExchangePairSettings.objects.create(left=pair.left, right=pair.right)
+        else:
+            update_frequency = pair_settings.update_frequency
+
+        need = timezone.now() - datetime.timedelta(minutes=update_frequency) >= pair.updated
+
         return need
