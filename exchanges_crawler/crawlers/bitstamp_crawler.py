@@ -25,8 +25,7 @@ class BitstampCrawler(CrawlerBase):
         if self.exchange.name != BitstampCrawler.expected_name:
             raise TypeError('Mismatched Exchange')
 
-    @staticmethod
-    def parse_pair_orderbook(response):
+    def parse_pair_orderbook(self, response):
         bids = []
         asks = []
 
@@ -39,8 +38,7 @@ class BitstampCrawler(CrawlerBase):
 
         return bids, asks
 
-    @staticmethod
-    def parse_pair_ticker(response):
+    def parse_pair_ticker(self, response):
         last_bid = None
         last_ask = None
 
@@ -53,91 +51,8 @@ class BitstampCrawler(CrawlerBase):
 
         return last_bid, last_ask
 
-    @staticmethod
-    def save_pair_orderbook(pair, bids, asks):
-        if type(pair) != ExchangePair:
-            return False
-
-        if not pair.id:
-            return False
-
-        if not bids and not asks:
-            return False
-
-        if type(bids) == list:
-            pair.bids = json.dumps(bids)
-
-        if type(asks) == list:
-            pair.asks = json.dumps(asks)
-
-        pair.save()
-
-        return True
-
-    @staticmethod
-    def save_pair_ticker(pair, bid, ask):
-        if type(pair) != ExchangePair:
-            return False
-
-        if not pair.id:
-            return False
-
-        if not bid and not ask:
-            return False
-
-        if bid > 0:
-            pair.last_bid = bid
-
-        if ask > 0:
-            pair.last_ask = ask
-
-        pair.save()
-
-        return True
-
-    @staticmethod
-    def fix_currency_code(code):
+    def fix_currency_code(self, code):
         return code.lower()
 
-    async def get_orderbooks(self):
-        for pair in self.exchange.pairs.all():
-            if not CrawlerBase.need_update(pair):
-                continue
-
-            try:
-                response = self.request_pair_api(
-                    self.exchange.orderbook_api,
-                    BitstampCrawler.fix_currency_code(pair.left.code),
-                    BitstampCrawler.fix_currency_code(pair.right.code),
-                )
-            except ConnectionError:
-                response = None
-
-            if response:
-                bids, asks = BitstampCrawler.parse_pair_orderbook(response)
-
-                if BitstampCrawler.save_pair_orderbook(pair, bids, asks):
-                    print(pair, 'orderbook updated')
-            else:
-                print(pair, 'orderbook response failed')
-
-    async def get_tickers(self):
-        for pair in self.exchange.pairs.all():
-            try:
-                response = self.request_pair_api(
-                    self.exchange.ticker_api,
-                    BitstampCrawler.fix_currency_code(pair.left.code),
-                    BitstampCrawler.fix_currency_code(pair.right.code),
-                )
-            except ConnectionError:
-                response = None
-
-            if response:
-                bid, ask = BitstampCrawler.parse_pair_ticker(response)
-
-                if BitstampCrawler.save_pair_ticker(pair, bid, ask):
-                    print(pair, 'ticker updated')
-            else:
-                print(pair, 'ticker response failed')
 
 

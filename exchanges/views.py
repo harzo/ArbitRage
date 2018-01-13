@@ -12,7 +12,7 @@ def spreads(request, left="BTC", right="USD"):
 
     pair_groups = get_grouped_currencies_pairs()
 
-    pairs = ExchangePair.objects.filter(left=left, right=right, active=True).all().order_by('exchange__id')
+    pairs = ExchangePair.objects.filter(left=left, right=right, active=True, exchange__active=True).all().order_by('exchange__id')
 
     profit_base = calculate_profit_base(5000, 'USD', right)
     spreads = calculate_ticker_spreads(pairs, profit_base)

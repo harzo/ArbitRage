@@ -20,10 +20,6 @@ class KrakenCrawler(CrawlerBase):
     """
 
     expected_name = 'Kraken'
-    code_mapping = {
-        'BTC': 'XBT',
-        'XBT': 'BTC'
-    }
 
     def __init__(self, exchange):
         super().__init__(exchange)
@@ -31,8 +27,12 @@ class KrakenCrawler(CrawlerBase):
         if self.exchange.name != KrakenCrawler.expected_name:
             raise TypeError('Mismatched Exchange')
 
-    @staticmethod
-    def parse_pair_orderbook(response):
+        self.code_mapping = {
+            'BTC': 'XBT',
+            'XBT': 'BTC'
+        }
+
+    def parse_pair_orderbook(self, response):
         bids = []
         asks = []
 
@@ -51,8 +51,7 @@ class KrakenCrawler(CrawlerBase):
 
         return bids, asks
 
-    @staticmethod
-    def parse_pair_ticker(response):
+    def parse_pair_ticker(self, response):
         last_bid = None
         last_ask = None
 
@@ -71,94 +70,9 @@ class KrakenCrawler(CrawlerBase):
 
         return last_bid, last_ask
 
-    @staticmethod
-    def save_pair_orderbook(pair, bids, asks):
-        if type(pair) != ExchangePair:
-            return False
+    def fix_currency_code(self, code):
+        if self.code_mapping:
+            if code in self.code_mapping:
+                return self.code_mapping[code]
 
-        if not pair.id:
-            return False
-
-        if not bids and not asks:
-            return False
-
-        if type(bids) == list:
-            pair.bids = json.dumps(bids)
-
-        if type(asks) == list:
-            pair.asks = json.dumps(asks)
-
-        pair.save()
-
-        return True
-
-    @staticmethod
-    def save_pair_ticker(pair, bid, ask):
-        if type(pair) != ExchangePair:
-            return False
-
-        if not pair.id:
-            return False
-
-        if not bid and not ask:
-            return False
-
-        if bid > 0:
-            pair.last_bid = bid
-
-        if ask > 0:
-            pair.last_ask = ask
-
-        pair.save()
-
-        return True
-
-    @staticmethod
-    def fix_currency_code(code):
-        if code in KrakenCrawler.code_mapping:
-            return KrakenCrawler.code_mapping[code]
-        else:
-            return code
-
-    async def get_orderbooks(self):
-        for pair in self.exchange.pairs.all():
-            if not CrawlerBase.need_update(pair):
-                continue
-
-            try:
-                response = self.request_pair_api(
-                    self.exchange.orderbook_api,
-                    KrakenCrawler.fix_currency_code(pair.left.code),
-                    KrakenCrawler.fix_currency_code(pair.right.code)
-                )
-            except ConnectionError:
-                response = None
-
-            if response:
-                bids, asks = KrakenCrawler.parse_pair_orderbook(response)
-
-                if KrakenCrawler.save_pair_orderbook(pair, bids, asks):
-                    print(pair, 'orderbook updated')
-            else:
-                print(pair, 'orderbook response failed')
-
-    async def get_tickers(self):
-        for pair in self.exchange.pairs.all():
-            try:
-                response = self.request_pair_api(
-                    self.exchange.ticker_api,
-                    KrakenCrawler.fix_currency_code(pair.left.code),
-                    KrakenCrawler.fix_currency_code(pair.right.code)
-                )
-            except ConnectionError:
-                response = None
-
-            if response:
-                bid, ask = KrakenCrawler.parse_pair_ticker(response)
-
-                if KrakenCrawler.save_pair_ticker(pair, bid, ask):
-                    print(pair, 'ticker updated')
-            else:
-                print(pair, 'ticker response failed')
-
-
+        return code
