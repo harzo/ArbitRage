@@ -21,16 +21,17 @@
     {% block css %}{% endblock %}
 
     {# Custom head JS #}
-    {% block head_js %}{% endblock %}
+    {% block js %}{% endblock %}
 </head>
 <body {% block body_attr %}{% endblock %}>
     <div class="off-canvas-wrapper">
         <div class="off-canvas-wrapper-inner" data-off-canvas-wrapper>
-            <div class="off-canvas position-left reveal-for-large" id="main-menu" data-off-canvas>
-                <div class="row column">
-                    <ul class="vertical menu">
-                      <li><a href="">Home</a></li>
-                    </ul>
+            <div class="off-canvas position-left reveal-for-large main-menu" id="main-menu" data-off-canvas>
+                <div class="row column show-for-large title">
+                    <h3>ArbitRage</h3>
+                </div>
+                <div class="row">
+                    {% include "overview/mainmenu.html" %}
                 </div>
             </div>
 
@@ -42,8 +43,20 @@
                     </div>
                 </div>
 
-                {% block base_body %}{% endblock %}
+                <div class="row column top-bar">
+                    {% block top_bar %}{% endblock %}
+                </div>
 
+                <div class="row column top-bread">
+                    <nav aria-label="You are here:" role="navigation">
+                        <ul class="breadcrumbs">
+                            <li><a href="/"><i class="fi-home"></i></a></li>
+                            {% block breadcrumbs %}{% endblock %}
+                        </ul>
+                    </nav>
+                </div>
+
+                {% block base_body %}{% endblock %}
             </div>
         </div>
     </div>
@@ -53,9 +66,7 @@
     <script>
       $(document).foundation();
     </script>
-    <script src="{% static "overview/js/js.cookie.js" %}"></script>
-
-    <script src="{% static "overview/js/jquery.twbsPagination.js" %}"></script>
+    <!--<script src="{% static "overview/js/js.cookie.js" %}"></script>-->
     <script src="{% static "overview/js/scripts.js" %}"></script>
 </body>
 </html>

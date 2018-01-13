@@ -12,7 +12,10 @@ class CurrencyAdmin(admin.ModelAdmin):
 
 
 class ExchangeAdmin(admin.ModelAdmin):
-    fields = ['name']
+    list_display = ('__str__', 'url', 'active')
+    list_editable = ('active',)
+
+    fields = ['name', 'display_name', 'url', 'orderbook_api', 'ticker_api', 'maker_fee', 'taker_fee', 'active']
     inlines = [ExchangePairInline]
 
 

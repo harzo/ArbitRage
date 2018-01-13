@@ -1,0 +1,83 @@
+.box {
+    position: relative;
+    margin: 20px 0;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #eee;
+    -webkit-box-shadow: 0 0 15px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.08);
+    border-radius: 4px;
+}
+
+.box .box-body {
+    clear: both;
+    padding: 20px;
+    color: #8c92a3;
+}
+
+.box .box-body p {
+    font-size: 13px !important;
+}
+
+.box .box-header {
+    position: relative;
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-top-right-radius: 3px;
+    -webkit-border-bottom-right-radius: 0;
+    -webkit-border-bottom-left-radius: 0;
+    -moz-border-radius-topleft: 3px;
+    -moz-border-radius-topright: 3px;
+    -moz-border-radius-bottomright: 0;
+    -moz-border-radius-bottomleft: 0;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    border-bottom: 0px double #B7C1D3;
+    color: #444;
+    padding-bottom: 0px;
+    background: #fff;
+}
+
+.box .box-header .box-title {
+    display: inline-block;
+    padding: 10px 0px 10px 0;
+    margin: 0 0 0 5px;
+    font-size: 14px;
+    float: left;
+    cursor: default;
+    font-weight: bold;
+    color: #8c92a3;
+}
+
+.box .box-header .box-title i {
+    height: 35px;
+    width: 35px;
+    display: block;
+    text-align: center;
+    line-height: 35px;
+    color: #8c92a3;
+    cursor: pointer;
+    margin: 0 5px;
+    position: relative;
+    padding: 0;
+    border-radius: 50%;
+    float: left;
+}
+
+.box .box-header .box-title span {
+    position: relative;
+    left: 5px;
+    color: #8c92a3;
+    font-weight: 300;
+    top: 7px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.bg-transparent {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}

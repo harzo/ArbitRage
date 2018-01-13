@@ -25,7 +25,7 @@ SECRET_KEY = 'd^7!963b1c1^plb)_nj#q55=9(1p(m-rah)i8))jr@%o6(88%-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -109,7 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Warsaw'
 
 USE_I18N = True
 
@@ -123,6 +123,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-CRONJOBS = [
-    ('*/5 * * * *', 'exchanges_crawler.runner.update_all')
-]
+# Allow any settings to be defined in local_settings.py which should be
+# ignored in your version control system allowing for settings to be
+# defined per machine.
+try:
+    from .local_settings import *
+except ImportError as e:
+    if "local_settings" not in str(e):
+        raise e
