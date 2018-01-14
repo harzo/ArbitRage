@@ -1,0 +1,174 @@
+{% extends "overview/base.html" %}
+
+{% load static exchanges_tags %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static "exchanges/css/exchanges.css" %}">
+  <link rel="stylesheet" href="{% static "exchanges/css/box.css" %}">
+{% endblock %}
+
+{% block js %}
+{#<script type="text/javascript" src="https://files.coinmarketcap.com/static/widget/currency.js"></script>#}
+{% endblock %}
+
+{% block body_attr %}class="calculator"{% endblock %}
+
+{% block top_bar %}
+    <h4>Calculator</h4>
+{% endblock %}
+
+{% block breadcrumbs %}
+  <li><a {% if not exchange %}class="disabled strong"{% endif %} href="{% url 'calculator' %}">Calculator</a></li>
+  {% if exchange %}
+    <li><a {% if not selected_pair %}class="disabled strong"{% endif %} href="{% url 'calculator' exchange.name %}">
+      {{ exchange.name }}
+    </a></li>
+  {% endif %}
+  {% if selected_pair %}
+    <li class="disabled strong">{{ selected_pair.left.code }}/{{ selected_pair.right.code }}</li>
+  {% endif %}
+{% endblock %}
+
+{% block base_body %}
+<div class="row">
+  <div class="small-12 medium-7 large-8 columns">
+    <div class="box">
+      <div class="box-header bg-transparent">
+        <!-- tools box -->
+        <div class="pull-right box-tools"> <span class="box-btn" data-widget="collapse"><i class="icon-minus"></i>
+        </span> <span class="box-btn" data-widget="remove"><i class="icon-cross"></i>
+        </span> </div>
+        <h3 class="box-title">
+          <i class="fi-bookmark"></i>
+          <span>Buy Exchange</span>
+        </h3>
+      </div>
+
+      <div class="box-body">
+        <div class="row">
+          <div class="large-4 columns">
+            <label>Name
+              <select>
+              {% for exch in exchanges %}
+              <option value="{{ exch.display_name }}" {% if exch.id == exchange.id %}selected{% endif %}>{{ exch.display_name }}</option>
+              {% endfor %}
+              </select>
+            </label>
+            <label><strong>Fees:</strong><br />
+              {% if not deposit_fees %}
+                Deposit: FREE
+              {% elif deposit_fees|length == 1 %}
+                Deposit: {{ deposit_fees.0.value|currency_format:selected_pair.right|currency_sign:selected_pair.right }}
+                + {{ deposit_fees.0.fraction|multiply:100|floatformat:2 }}%
+              {% else %}
+                Deposit: <select>
+                  {% for fee in deposit_fees %}
+                  <option value="{{ fee.id }}">{{ fee.name }}</option>
+                  {% endfor %}
+                </select>
+              {% endif %}<br />
+              Taker: {{ exchange.taker_fee|multiply:100|floatformat:2 }}%<br />
+              {% if not withdraw_fees %}
+                Withdraw: FREE
+              {% elif withdraw_fees|length == 1 %}
+                Withdraw: {{ withdraw_fees.0.value|currency_format:selected_pair.left|currency_sign:selected_pair.left }}
+                {% if withdraw_fees.0.fraction > 0 %} %}+ {{ withdraw_fees.0.fraction|multiply:100|floatformat:2 }}%{% endif %}
+              {% else %}
+                Withdraw: <select>
+                  {% for fee in withdraw_fees %}
+                  <option value="{{ fee.id }}">{{ fee.name }}</option>
+                  {% endfor %}
+                </select>
+              {% endif %}
+            </label>
+          </div>
+          <div class="large-4 columns">
+            <label>Pair
+              <select>
+                {% for pair in exchange_pairs %}
+                <option value="{{ pair.id }}" {% if selected_pair == pair %}selected{% endif %}>
+                  {{ pair.left.code }} / {{ pair.right.code }}
+                </option>
+                {% endfor %}
+              </select>
+            </label>
+            <label><strong>Last ask:</strong></label>
+            <label>
+              <h5 class="text-center">{{ selected_pair.last_ask|currency_format:selected_pair.right|currency_sign:selected_pair.right }}</h5>
+            </label>
+          </div>
+          <div class="large-4 columns">
+            <label>Buy for
+            <div class="input-group">
+              <input class="input-group-field" type="text" placeholder="amount you want to spent">
+              <span class="input-group-label">{{ selected_pair.right.code }}</span>
+            </div>
+            </label>
+            <label>You'll get
+            <div class="input-group">
+              <input class="input-group-field" type="text" placeholder="amount you want to get">
+              <span class="input-group-label">{{ selected_pair.left.code }}</span>
+            </div>
+            </label>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <div class="small-12 medium-5 large-4 columns">
+    <div class="box">
+      <div class="box-header bg-transparent">
+        <!-- tools box -->
+        <div class="pull-right box-tools"> <span class="box-btn" data-widget="collapse"><i class="icon-minus"></i>
+        </span> <span class="box-btn" data-widget="remove"><i class="icon-cross"></i>
+        </span> </div>
+        <h3 class="box-title">
+          <i class="fi-bookmark"></i>
+          <span>Additional Costs</span>
+        </h3>
+      </div>
+
+      <div class="box-body">
+        <div class="row">
+          <div class="large-6 columns">
+            <label>Initial costs
+            <input type="text" placeholder="bank, transfer, etc.">
+            </label>
+          </div>
+          <div class="large-6 columns">
+            <label>Final costs
+            <input type="text" placeholder="exchange, transfer, etc.">
+            </label>
+          </div>
+        </div>
+        <div class="row columns">
+          <p class="text-justify">
+            <strong>Tips</strong></br>
+            Mind currently selected currencies pair. Bank or exchange transfers costs may differ for each currency.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="small-12 medium-12 large-12 columns">
+    <div class="box">
+      <div class="box-header bg-transparent">
+        <div class="pull-right box-tools">
+          <span class="box-btn" data-widget="collapse"><i class="icon-minus"></i></span>
+          <span class="box-btn" data-widget="remove"><i class="icon-cross"></i></span>
+        </div>
+        <h3 class="box-title">
+          <i class="fi-bookmark"></i>
+          <span>Sell Exchanges</span>
+        </h3>
+      </div>
+
+      <div class="box-body">
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

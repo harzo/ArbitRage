@@ -23,5 +23,7 @@ urlpatterns = [
     path('spreads/', exchanges_views.spreads, name="spreads"),
     path('spreads/<left>/<right>', exchanges_views.spreads, name="spreads"),
     path('calculator/', exchanges_views.calculator, name="calculator"),
+    path('calculator/<exchange>/', exchanges_views.calculator, name="calculator"),
+    path('calculator/<exchange>/<left>/<right>', exchanges_views.calculator, name="calculator"),
     path('update/', include('exchanges_crawler.urls')),
 ]

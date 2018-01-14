@@ -27,8 +27,8 @@ def currency_sign(value, arg):
 def currency_format(value, arg):
     if type(arg) != Currency:
         return value
-
-    return "{0:.8f}".format(float(value)) if arg.crypto else "{0:.2f}".format(float(value))
+    value = float(value)
+    return "{0:.8f}".format(value) if arg.crypto else "{0:.2f}".format(value)
 
 
 @register.filter

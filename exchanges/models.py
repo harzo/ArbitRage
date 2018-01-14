@@ -43,3 +43,19 @@ class ExchangePair(models.Model):
 
     def __str__(self):
         return self.exchange.name+': '+self.left.code+'/'+self.right.code
+
+
+class ExchangeFee(models.Model):
+    name = models.CharField(max_length=200)
+    exchange = models.ForeignKey(Exchange, on_delete=models.CASCADE, related_name='fees')
+    currency = models.ForeignKey(Currency, on_delete=models.CASCADE, related_name='currency', null=False)
+    deposit = models.BooleanField(default=True)
+    value = models.FloatField(default=0.0)
+    fraction = models.FloatField(default=0.0, validators=[MinValueValidator(0.0), MaxValueValidator(1.0)])
+    min = models.FloatField(default=0.0)
+    max = models.FloatField(null=True, blank=True)
+    active = models.BooleanField(default=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name

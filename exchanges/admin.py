@@ -1,10 +1,14 @@
 from django.contrib import admin
 
-from .models import Currency, Exchange, ExchangePair
+from .models import Currency, Exchange, ExchangePair, ExchangeFee
 
 
 class ExchangePairInline(admin.TabularInline):
     model = ExchangePair
+
+
+class ExchangeFeeInline(admin.TabularInline):
+    model = ExchangeFee
 
 
 class CurrencyAdmin(admin.ModelAdmin):
@@ -16,7 +20,7 @@ class ExchangeAdmin(admin.ModelAdmin):
     list_editable = ('active',)
 
     fields = ['name', 'display_name', 'url', 'orderbook_api', 'ticker_api', 'maker_fee', 'taker_fee', 'active']
-    inlines = [ExchangePairInline]
+    inlines = [ExchangePairInline, ExchangeFeeInline]
 
 
 admin.site.register(Currency, CurrencyAdmin)

@@ -13,6 +13,7 @@
     clear: both;
     padding: 20px;
     color: #8c92a3;
+    display: block;
 }
 
 .box .box-body p {
