@@ -50,6 +50,14 @@ def calculator(request, exchange=None, left=None, right=None):
     if exchange:
         exchange_pairs = exchange.pairs.filter(active=True).order_by('id').all()
 
+    if not selected_pair:
+        cookie_pair = request.COOKIES.get('pair')
+        if cookie_pair:
+            try:
+                selected_pair = ExchangePair.objects.get(id=int(cookie_pair))
+            except ValueError:
+                print('Deleting cookie') # todo: delete cookie
+
     if not selected_pair and exchange_pairs:
         selected_pair = ExchangePair.objects.filter(exchange=exchange, active=True).order_by('id').first()
 
