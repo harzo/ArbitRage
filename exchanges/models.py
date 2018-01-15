@@ -39,7 +39,7 @@ class ExchangePair(models.Model):
     last_bid = models.FloatField(default=0.0)
     last_ask = models.FloatField(default=0.0)
     active = models.BooleanField(default=True)
-    updated = models.DateTimeField(auto_now=True)
+    updated = models.DateTimeField()
 
     def __str__(self):
         return self.exchange.name+': '+self.left.code+'/'+self.right.code

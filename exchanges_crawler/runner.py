@@ -24,7 +24,7 @@ def init_crawlers():
 
 # Add to settings.py
 # CRONJOBS = [
-#     ('0 */6 * * *', 'exchanges_crawler.runner.update_fiats')
+#     ('0 */6 * * *', 'exchanges_crawler.runner.update_fiats_runner')
 # ]
 def update_fiats_runner():
     exchange = Exchange.objects.filter(name="Fiat").first()

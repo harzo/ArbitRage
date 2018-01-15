@@ -91,6 +91,7 @@ class CrawlerBase:
         if type(asks) == list:
             pair.asks = json.dumps(asks)
 
+        pair.updated = timezone.now()
         pair.save()
 
         return True

@@ -90,7 +90,7 @@ def calculate_orderbook_buy_value(pair, right_amount):
 def calculate_orderbook_sell_amount(pair, left_value):
     try:
         bids = eval(pair.bids)
-    except SyntaxError:
+    except:
         return 0
 
     value_left = left_value
