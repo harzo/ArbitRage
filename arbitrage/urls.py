@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from exchanges import views as exchanges_views
+from exchanges import views_apis as exchanges_apis
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,5 +26,6 @@ urlpatterns = [
     path('calculator/', exchanges_views.calculator, name="calculator"),
     path('calculator/<exchange>/', exchanges_views.calculator, name="calculator"),
     path('calculator/<exchange>/<left>/<right>', exchanges_views.calculator, name="calculator"),
+    path('calculator/math/buy_amount_volume/', exchanges_apis.calculate_buy_amount_volume),
     path('update/', include('exchanges_crawler.urls')),
 ]

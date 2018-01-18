@@ -4,9 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Count
 from exchanges.models import Currency, ExchangePair, Exchange, ExchangeFee
 from exchanges.views_helpers import get_grouped_currencies_pairs, \
-    calculate_basic_profit, calculate_orderbook_buy_value, \
-    calculate_orderbook_sell_amount, calculate_profit_base, \
-    calculate_ticker_spreads
+    calculate_profit_base, calculate_ticker_spreads
 
 
 @require_http_methods(["GET"])

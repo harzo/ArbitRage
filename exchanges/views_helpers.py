@@ -55,59 +55,82 @@ def calculate_profit_base(amount, code, right):
 
 
 def calculate_basic_profit(amount, buy_pair, sell_pair):
-    buy_value = calculate_orderbook_buy_value(buy_pair, amount)
+    buy_value = calculate_buy_volume(buy_pair, amount)
 
-    sell_amount = calculate_orderbook_sell_amount(sell_pair, buy_value)
+    sell_amount = calculate_sell_amount(sell_pair, buy_value)
 
     return sell_amount - amount
 
 
-def calculate_orderbook_buy_value(pair, right_amount):
+def calculate_buy_volume(pair, right_amount, taker=True):
     try:
         asks = eval(pair.asks)
     except:
         return 0
 
-    amount_left = right_amount
-    value = 0
+    volume = calculate_volume(asks, right_amount)
 
-    for ask in asks:
-        b_rate, b_value = float(ask[0]), float(ask[1])
-        ask_amount = b_rate * b_value
-
-        if ask_amount >= amount_left:
-            ratio = amount_left/ask_amount
-
-            amount_left = 0
-            value += b_value*ratio
-        else:
-            amount_left -= ask_amount
-            value += b_value
-
-    return value*(1-pair.exchange.taker_fee)
+    return volume*(1-(pair.exchange.taker_fee if taker else pair.exchange.maker_fee))
 
 
-def calculate_orderbook_sell_amount(pair, left_value):
+def calculate_buy_amount(pair, left_volume, taker=True):
+    try:
+        asks = eval(pair.asks)
+    except:
+        return 0
+
+    left_volume = left_volume/(1-(pair.exchange.taker_fee if taker else pair.exchange.maker_fee))
+
+    return calculate_amount(asks, left_volume)
+
+
+def calculate_sell_amount(pair, left_volume, taker=True):
     try:
         bids = eval(pair.bids)
     except:
         return 0
 
-    value_left = left_value
+    amount = calculate_amount(bids, left_volume)
+
+    return amount*(1-(pair.exchange.taker_fee if taker else pair.exchange.maker_fee))
+
+
+def calculate_volume(orderbook, amount):
+    amount_left = amount
+    volume = 0
+
+    for order in orderbook:
+        o_rate, o_volume = float(order[0]), float(order[1])
+        order_amount = o_rate * o_volume
+
+        if order_amount >= amount_left:
+            ratio = amount_left/order_amount
+
+            amount_left = 0
+            volume += o_volume*ratio
+        else:
+            amount_left -= order_amount
+            volume += o_volume
+            
+    return volume
+
+
+def calculate_amount(orderbook, volume):
+    volume_left = volume
     amount = 0
 
-    for bid in bids:
-        a_rate, a_value = float(bid[0]), float(bid[1])
+    for order in orderbook:
+        o_rate, o_volume = float(order[0]), float(order[1])
 
-        bid_value = a_value
+        order_volume = o_volume
 
-        if bid_value >= value_left:
-            ratio = value_left/bid_value
+        if order_volume >= volume_left:
+            ratio = volume_left/order_volume
 
-            value_left = 0
-            amount += a_rate*a_value*ratio
+            volume_left = 0
+            amount += o_rate*o_volume*ratio
         else:
-            value_left -= bid_value
-            amount += a_rate*a_value
+            volume_left -= order_volume
+            amount += o_rate*o_volume
 
     return amount

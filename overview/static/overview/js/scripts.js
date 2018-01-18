@@ -1,6 +1,6 @@
-$(window).bind("load resize", function(){
-    $('.off-canvas').css('min-height', window.innerHeight+'px');
-    $('.off-canvas-content').css('min-height', window.innerHeight+'px');
+$(window).bind('load resize', function() {
+  $('.off-canvas').css('min-height', window.innerHeight + 'px');
+  $('.off-canvas-content').css('min-height', window.innerHeight + 'px');
 });
 
 //function setProfileCookie(profile_id){
