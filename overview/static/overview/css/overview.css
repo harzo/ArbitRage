@@ -116,7 +116,7 @@ input[type="text"], input[type="password"], input[type="date"], input[type="date
     box-shadow: none;
     color: rgba(0, 0, 0, 0.75);
     display: block;
-    font-size: 0.875em;
+    font-size: 0.975em;
     padding: 0.5em;
     /* height: 2.3125em; */
     width: 100%;
@@ -124,4 +124,16 @@ input[type="text"], input[type="password"], input[type="date"], input[type="date
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     transition: box-shadow 0.45s, border-color 0.45s ease-in-out;
+}
+
+select{
+    height: 2.3125rem;
+    padding: .5rem;
+    margin: 0 0 1rem;
+    font-size: 0.975rem;
+    font-family: inherit;
+    line-height: normal;
+    color: rgba(0, 0, 0, 0.75);
+    background-color: #fafafa;
+    border-radius: 0;
 }

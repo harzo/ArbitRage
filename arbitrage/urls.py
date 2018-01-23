@@ -27,5 +27,6 @@ urlpatterns = [
     path('calculator/<exchange>/', exchanges_views.calculator, name="calculator"),
     path('calculator/<exchange>/<left>/<right>', exchanges_views.calculator, name="calculator"),
     path('calculator/math/buy_amount_volume/', exchanges_apis.calculate_buy_amount_volume),
+    path('calculator/math/sell_results/', exchanges_apis.calculate_sell_results),
     path('update/', include('exchanges_crawler.urls')),
 ]

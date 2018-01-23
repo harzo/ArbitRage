@@ -57,32 +57,22 @@ $(document).ready(function() {
       return;
     }
 
-    const csrf = $('input[name="csrfmiddlewaretoken"]').val();
-    const data = new FormData();
-    data.append(
-      'pair_id',
-      $('#selectPair')
+    const pairId = $('#selectPair')
         .find('option:selected')
-        .val()
-    );
-    data.append('side', 'right');
-    data.append('value', value);
+        .val();
+    const side = 'right';
 
-    fetch(origin + page + mathAmountVolume, {
-      method: 'post',
-      headers: {
-        'X-CSRFToken': csrf,
-      },
-      body: data,
-      credentials: 'same-origin',
-    })
-      .then(json)
+    getBuyAmountVolume(pairId, side, value)
       .then(function(data) {
         const volume = data.result.toFixed(8);
         $('#inputVolume')
           .val(volume)
           .attr('value', volume);
         updateFees();
+      })
+      .then(function(){
+        const volume = parseFloat($('#inputVolume').val().replace(',','.'));
+        return getSellResults(pairId, value, volume)
       })
       .catch(function(error) {
         resetFields();
@@ -97,32 +87,25 @@ $(document).ready(function() {
       return;
     }
 
-    const csrf = $('input[name="csrfmiddlewaretoken"]').val();
-    const data = new FormData();
-    data.append(
-      'pair_id',
-      $('#selectPair')
+    const pairId = $('#selectPair')
         .find('option:selected')
-        .val()
-    );
-    data.append('side', 'left');
-    data.append('value', value);
+        .val();
+    const side = 'left';
 
-    fetch(origin + page + mathAmountVolume, {
-      method: 'post',
-      headers: {
-        'X-CSRFToken': csrf,
-      },
-      body: data,
-      credentials: 'same-origin',
-    })
-      .then(json)
+    getBuyAmountVolume(pairId, side, value)
       .then(function(data) {
         const amount = data.result.toFixed(2);
         $('#inputAmount')
           .val(amount)
           .attr('value', amount);
         updateFees();
+      })
+      .then(function(){
+        const amount = parseFloat($('#inputAmount').val().replace(',','.'));
+        return getSellResults(pairId, amount, value)
+      })
+      .then(function(result){
+        console.log(result);
       })
       .catch(function(error) {
         resetFields();
@@ -161,6 +144,45 @@ $(document).ready(function() {
 
   function json(response) {
     return response.json();
+  }
+
+  function getSellResults(pairId, amount, volume){
+    const origin = document.location.origin;
+    const page = '/calculator/';
+    const mathSellResults = 'math/sell_results/';
+
+    const data = new FormData();
+    data.append('pair_id', pairId);
+    data.append('amount', amount);
+    data.append('volume', volume);
+
+    return fetchPostApi(origin + page + mathSellResults, data)
+  }
+
+  function getBuyAmountVolume(pairId, side, value){
+    const origin = document.location.origin;
+    const page = '/calculator/';
+    const mathAmountVolume = 'math/buy_amount_volume/';
+
+    const data = new FormData();
+    data.append('pair_id', pairId);
+    data.append('side', side);
+    data.append('value', value);
+
+    return fetchPostApi(origin + page + mathAmountVolume, data)
+  }
+
+  function fetchPostApi(endpoint, data){
+    const csrf = $('input[name="csrfmiddlewaretoken"]').val();
+
+    return fetch(endpoint, {
+      method: 'post',
+      headers: {
+        'X-CSRFToken': csrf,
+      },
+      body: data,
+      credentials: 'same-origin',
+    }).then(json)
   }
 
   String.prototype.format = function() {
