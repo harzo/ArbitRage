@@ -167,7 +167,20 @@
       </div>
 
       <div class="box-body">
+        <table class="stack results-table">
+          <thead>
+            <tr>
+              <th>Exchange</th>
+              <th>Sell for</th>
+              <th>Sell rate</th>
+              <th>You'll gain</th>
+              <th>Profit</th>
+            </tr>
+          </thead>
+          <tbody id="results-body">
 
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -178,7 +191,8 @@
     <script type="application/javascript">
       const takerFee = {{ exchange.taker_fee }};
       const leftFormat = '{0} {{ selected_pair.left.code }}';
-      const rightFormat = '{{ selected_pair.right.code }}{0}';
+      const rightFormat = '{{ selected_pair.right.sign }}{0}';
     </script>
+    <script src="{% static "exchanges/js/partials.js" %}"></script>
     <script src="{% static "exchanges/js/calculator.js" %}"></script>
 {% endblock %}

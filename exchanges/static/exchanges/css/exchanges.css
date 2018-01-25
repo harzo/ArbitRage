@@ -48,3 +48,17 @@ body.spreads .spread-table tbody td{
 .gte10pc{
     font-size: 120%;
 }
+
+body.calculator .results-table{
+    width: 100%;
+    font-size: 14px;
+    display: none;
+}
+
+body.calculator .results-table thead th{
+    text-align: center;
+}
+
+body.calculator .results-table tbody td{
+    text-align: center;
+}

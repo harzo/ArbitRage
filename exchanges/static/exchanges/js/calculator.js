@@ -74,6 +74,10 @@ $(document).ready(function() {
         const volume = parseFloat($('#inputVolume').val().replace(',','.'));
         return getSellResults(pairId, value, volume)
       })
+      .then(function(result){
+        if(result.sell_amounts.length > 0)
+          generateResults(result.sell_amounts);
+      })
       .catch(function(error) {
         resetFields();
         console.log('Request failed', error);
@@ -105,7 +109,8 @@ $(document).ready(function() {
         return getSellResults(pairId, amount, value)
       })
       .then(function(result){
-        console.log(result);
+        if(result.sell_amounts.length > 0)
+          generateResults(result.sell_amounts);
       })
       .catch(function(error) {
         resetFields();
@@ -129,6 +134,21 @@ $(document).ready(function() {
 
   function resetInputVolume(){
       $('#inputVolume').val('').attr('value', '');
+  }
+
+  function generateResults(results){
+    results.forEach(function(result){
+      const resultsRow = calculatorExchangeResult.format(
+          result.exchange_name,
+          rightFormat.format(result.amount.toFixed(2)),
+          rightFormat.format(result.rate.toFixed(4)),
+          rightFormat.format(result.profit.toFixed(2)),
+          (result.percent*100).toFixed(2).toString() + '%'
+      )
+      $('#results-body').append(resultsRow);
+    });
+
+    $('.results-table').show();
   }
 
   function updateTakerFee(){
